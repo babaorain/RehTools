@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>醫療工具集</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #ffffff; /* 背景色為白色 */
+            color: #000000; /* 文字顏色為黑色 */
+        }
+        h1 {
+            text-align: center;
+            color: #333333; /* 標題顏色為深灰色 */
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .search-bar {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 5px 0 0 5px;
+        }
+        .search-button {
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #004d40;
+        }
+        .tool-item {
+            margin-bottom: 20px;
+            background-color: #f9f9f9; /* 柔和的淺灰色背景 */
+            padding: 15px;
+            border: 1px solid #dddddd; /* 淺灰色邊框 */
+            border-radius: 5px;
+            box-shadow: 2px 2px 12px rgb(0 0 0 / 10%);
+        }
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .tool-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        .tool-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333333;
+            margin: 0;
+        }
+        .tool-description {
+            margin-bottom: 15px;
+            color: #666;
+        }
+        .tool-link {
+            display: inline-block;
+            background-color: #00796b;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .tool-link:hover {
+            background-color: #004d40;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #777;
+        }
+        /* 響應式設計 */
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            .tool-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .tool-icon {
+                margin-bottom: 10px;
+            }
+            .search-bar {
+                flex-direction: column;
+            }
+            .search-input {
+                border-radius: 5px;
+                margin-bottom: 10px;
+            }
+            .search-button {
+                border-radius: 5px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>醫療工具集</h1>
+        <p class="subtitle">一站式醫療評估與計算工具</p>
+        
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="搜索工具..." id="searchInput">
+            <button class="search-button" onclick="searchTools()">搜索</button>
+        </div>
+        
+        <div id="toolsContainer">
+            <!-- 巴氏量表計算器 -->
+            <div class="tool-item" data-keywords="巴氏 barthel 量表 ADL 日常活動 生活能力 評估">
+                <div class="tool-header">
+                    <div class="tool-icon">📊</div>
+                    <h3 class="tool-title">巴氏量表計算器</h3>
+                </div>
+                <p class="tool-description">評估患者日常生活活動能力(ADL)的標準化量表計算工具</p>
+                <a href="barthel.html" class="tool-link">立即使用</a>
+            </div>
+            
+            <!-- 肌肉力量評估工具 -->
+            <div class="tool-item" data-keywords="肌肉 力量 肌力 評估 上肢 下肢 左側 右側 關節">
+                <div class="tool-header">
+                    <div class="tool-icon">💪</div>
+                    <h3 class="tool-title">肌肉力量評估工具</h3>
+                </div>
+                <p class="tool-description">評估患者上下肢左右側主要關節的肌肉力量</p>
+                <a href="musclePower.html" class="tool-link">立即使用</a>
+            </div>
+            
+            <!-- 改良版艾氏量表評估工具 -->
+            <div class="tool-item" data-keywords="艾氏 ashworth 量表 評估 肌張力 痙攣 肘關節 腕關節 膝關節 踝關節">
+                <div class="tool-header">
+                    <div class="tool-icon">🔄</div>
+                    <h3 class="tool-title">改良版艾氏量表評估工具</h3>
+                </div>
+                <p class="tool-description">評估患者肌肉張力增高或痙攣程度的標準量表</p>
+                <a href="ashworth.html" class="tool-link">立即使用</a>
+            </div>
+            
+            <!-- BMI計算器 -->
+            <div class="tool-item" data-keywords="BMI 體重指數 計算 體重 身高">
+                <div class="tool-header">
+                    <div class="tool-icon">⚖️</div>
+                    <h3 class="tool-title">BMI計算器</h3>
+                </div>
+                <p class="tool-description">快速計算體重指數(BMI)，評估健康狀態</p>
+                <a href="bmi.html" class="tool-link">立即使用</a>
+            </div>
+            
+            <!-- 藥物劑量計算器 -->
+            <div class="tool-item" data-keywords="藥物 劑量 計算 用藥 換算">
+                <div class="tool-header">
+                    <div class="tool-icon">💊</div>
+                    <h3 class="tool-title">藥物劑量計算器</h3>
+                </div>
+                <p class="tool-description">基於患者體重、年齡等快速計算安全用藥劑量</p>
+                <a href="#" class="tool-link">即將推出</a>
+            </div>
+            
+            <!-- GCS評分計算器 -->
+            <div class="tool-item" data-keywords="GCS 格拉斯哥 昏迷 評分">
+                <div class="tool-header">
+                    <div class="tool-icon">🧠</div>
+                    <h3 class="tool-title">GCS評分計算器</h3>
+                </div>
+                <p class="tool-description">格拉斯哥昏迷量表(GCS)評估工具</p>
+                <a href="#" class="tool-link">即將推出</a>
+            </div>
+            
+            <!-- 血壓記錄工具 -->
+            <div class="tool-item" data-keywords="血壓 管理 記錄 跟蹤">
+                <div class="tool-header">
+                    <div class="tool-icon">❤️</div>
+                    <h3 class="tool-title">血壓記錄工具</h3>
+                </div>
+                <p class="tool-description">方便記錄和跟蹤血壓變化的工具</p>
+                <a href="#" class="tool-link">即將推出</a>
+            </div>
+            
+            <!-- MMSE評估工具 -->
+            <div class="tool-item" data-keywords="MMSE 簡易精神狀態檢查 認知 評估">
+                <div class="tool-header">
+                    <div class="tool-icon">🧩</div>
+                    <h3 class="tool-title">MMSE評估工具</h3>
+                </div>
+                <p class="tool-description">簡易精神狀態檢查(MMSE)評估認知功能</p>
+                <a href="#" class="tool-link">即將推出</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 醫療工具集 | 設計開發: BigbigDada</p>
+            <p>免責聲明: 本工具僅供參考，不能替代專業醫療建議</p>
+        </div>
+    </div>
+    
+    <script>
+        function searchTools() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const toolItems = document.querySelectorAll('.tool-item');
+            
+            toolItems.forEach(item => {
+                const keywords = item.getAttribute('data-keywords').toLowerCase();
+                const title = item.querySelector('.tool-title').textContent.toLowerCase();
+                const description = item.querySelector('.tool-description').textContent.toLowerCase();
+                
+                if (keywords.includes(searchTerm) || 
+                    title.includes(searchTerm) || 
+                    description.includes(searchTerm) || 
+                    searchTerm === '') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

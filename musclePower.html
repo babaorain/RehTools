@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>肌肉力量評估工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #ffffff; /* 背景色為白色 */
+            color: #000000; /* 文字顏色為黑色 */
+        }
+        h1 {
+            text-align: center;
+            color: #333333; /* 標題顏色為深灰色 */
+        }
+        .question {
+            margin-bottom: 20px;
+            background-color: #f9f9f9; /* 柔和的淺灰色背景 */
+            padding: 15px;
+            border: 1px solid #dddddd; /* 淺灰色邊框 */
+            border-radius: 5px;
+            box-shadow: 2px 2px 12px rgb(0 0 0 / 10%);
+        }
+        .question label {
+            font-weight: bold;
+            color: #333333; /* 標題顏色為深灰色 */
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .options select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .result {
+            font-size: 24px; /* 字體增大 */
+            font-weight: bold;
+            margin-top: 30px;
+            text-align: center;
+            color: #000000; /* 文字顏色為黑色 */
+        }
+        .result div {
+            margin-bottom: 5px;
+        }
+        .btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px; /* 調整按鈕大小 */
+            font-size: 20px; /* 調整按鈕字體大小 */
+            background-color: #00796b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #004d40;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #777;
+        }
+        .back-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .back-button:hover {
+            background-color: #004d40;
+        }
+        .section-title {
+            color: #666;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        .joint-item {
+            margin-bottom: 10px;
+        }
+        /* 響應式設計 */
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            .result {
+                font-size: 20px; /* 手機端字體稍小 */
+            }
+            .question {
+                padding: 10px;
+            }
+            .btn {
+                padding: 10px 20px; /* 調小手機端的按鈕 */
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-button">← 返回工具集首頁</a>
+    
+    <h1>肌肉力量評估工具</h1>
+
+    <form id="musclePowerForm">
+        <!-- 左側 -->
+        <div class="question">
+            <label>左側 Left Side</label>
+            <!-- Upper Extremity -->
+            <div class="section-title">
+                <label>上肢 Upper Extremity</label>
+            </div>
+            <div class="options">
+                <div class="joint-item">
+                    <label>肘關節 Elbow:</label>
+                    <select name="leftElbow" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>腕關節 Wrist:</label>
+                    <select name="leftWrist" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>手指 Finger:</label>
+                    <select name="leftFinger" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Lower Extremity -->
+            <div class="section-title">
+                <label>下肢 Lower Extremity</label>
+            </div>
+            <div class="options">
+                <div class="joint-item">
+                    <label>髖關節 Hip:</label>
+                    <select name="leftHip" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>膝關節 Knee:</label>
+                    <select name="leftKnee" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>踝關節 Ankle:</label>
+                    <select name="leftAnkle" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側 -->
+        <div class="question">
+            <label>右側 Right Side</label>
+            <!-- Upper Extremity -->
+            <div class="section-title">
+                <label>上肢 Upper Extremity</label>
+            </div>
+            <div class="options">
+                <div class="joint-item">
+                    <label>肘關節 Elbow:</label>
+                    <select name="rightElbow" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>腕關節 Wrist:</label>
+                    <select name="rightWrist" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>手指 Finger:</label>
+                    <select name="rightFinger" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Lower Extremity -->
+            <div class="section-title">
+                <label>下肢 Lower Extremity</label>
+            </div>
+            <div class="options">
+                <div class="joint-item">
+                    <label>髖關節 Hip:</label>
+                    <select name="rightHip" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>膝關節 Knee:</label>
+                    <select name="rightKnee" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+                <div class="joint-item">
+                    <label>踝關節 Ankle:</label>
+                    <select name="rightAnkle" required>
+                        <option value="1">1 - 可見肌肉收縮</option>
+                        <option value="2">2 - 水平移動可完成關節活動</option>
+                        <option value="3">3 - 對抗地心引力可完成關節活動</option>
+                        <option value="4">4 - 對抗阻力可完成關節活動</option>
+                        <option value="5" selected>5 - 正常肌力</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn" onclick="calculateMusclePower()">評估</button>
+    </form>
+
+    <div class="result" id="result"></div>
+</div>
+
+<div class="footer">
+    <p>© 2023 醫療工具集 | 設計開發: BigbigDada</p>
+    <p>免責聲明: 本工具僅供參考，不能替代專業醫療建議</p>
+</div>
+
+<script>
+function calculateMusclePower() {
+    var form = document.getElementById('musclePowerForm');
+    var elements = form.elements;
+    
+    // 獲取所有關節的分數
+    var joints = {
+        '左側肘關節 Left Elbow': elements['leftElbow'].value,
+        '左側腕關節 Left Wrist': elements['leftWrist'].value,
+        '左側手指 Left Finger': elements['leftFinger'].value,
+        '左側髖關節 Left Hip': elements['leftHip'].value,
+        '左側膝關節 Left Knee': elements['leftKnee'].value,
+        '左側踝關節 Left Ankle': elements['leftAnkle'].value,
+        '右側肘關節 Right Elbow': elements['rightElbow'].value,
+        '右側腕關節 Right Wrist': elements['rightWrist'].value,
+        '右側手指 Right Finger': elements['rightFinger'].value,
+        '右側髖關節 Right Hip': elements['rightHip'].value,
+        '右側膝關節 Right Knee': elements['rightKnee'].value,
+        '右側踝關節 Right Ankle': elements['rightAnkle'].value
+    };
+
+    // 構建結果顯示
+    var resultText = '<div style="font-size: 18px; text-align: left;">';
+    
+    // 先顯示左側
+    resultText += '<div style="margin-bottom: 15px;"><strong>左側 Left Side:</strong></div>';
+    for (var joint in joints) {
+        if (joint.includes('左側')) {
+            resultText += `<div>${joint}: ${joints[joint]}</div>`;
+        }
+    }
+    
+    // 再顯示右側
+    resultText += '<div style="margin: 15px 0;"><strong>右側 Right Side:</strong></div>';
+    for (var joint in joints) {
+        if (joint.includes('右側')) {
+            resultText += `<div>${joint}: ${joints[joint]}</div>`;
+        }
+    }
+
+    resultText += '</div>';
+
+    // 顯示結果
+    var resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = resultText;
+}
+</script>
+
+</body>
+</html> 

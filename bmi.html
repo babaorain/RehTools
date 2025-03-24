@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI計算器</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --text-color: #333;
+            --light-bg: #f9f9f9;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #ffffff; /* 背景色為白色 */
+            color: #000000; /* 文字顏色為黑色 */
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333333; /* 標題顏色為深灰色 */
+            margin-bottom: 30px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #00796b;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .back-button:hover {
+            background-color: #004d40;
+        }
+        
+        .calculator {
+            background-color: #f9f9f9; /* 柔和的淺灰色背景 */
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 2px 2px 12px rgb(0 0 0 / 10%);
+            border: 1px solid #dddddd; /* 淺灰色邊框 */
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333333;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        
+        .btn:hover {
+            background-color: #004d40;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+            border: 1px solid #dddddd;
+        }
+        
+        .result h2 {
+            margin-top: 0;
+            color: #333333;
+        }
+        
+        .bmi-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .bmi-category {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .bmi-info {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .bmi-scale {
+            display: flex;
+            margin: 20px 0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .scale-underweight {
+            background-color: #3498db;
+            flex: 1;
+        }
+        
+        .scale-normal {
+            background-color: #2ecc71;
+            flex: 1;
+        }
+        
+        .scale-overweight {
+            background-color: #f39c12;
+            flex: 1;
+        }
+        
+        .scale-obese {
+            background-color: #e74c3c;
+            flex: 1;
+        }
+        
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .calculator {
+                padding: 15px;
+            }
+            
+            .bmi-value {
+                font-size: 28px;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">← 返回工具集首頁</a>
+        
+        <h1>BMI計算器</h1>
+        
+        <div class="calculator">
+            <div class="form-group">
+                <label for="height">身高 (厘米)</label>
+                <input type="number" id="height" placeholder="例如: 170" min="50" max="250">
+            </div>
+            
+            <div class="form-group">
+                <label for="weight">體重 (公斤)</label>
+                <input type="number" id="weight" placeholder="例如: 65" min="10" max="500">
+            </div>
+            
+            <button class="btn" onclick="calculateBMI()">計算BMI</button>
+            
+            <div class="result" id="result">
+                <h2>您的BMI結果</h2>
+                <div class="bmi-value" id="bmiValue">25.4</div>
+                <div class="bmi-category" id="bmiCategory">超重</div>
+                
+                <div class="bmi-scale">
+                    <div class="scale-underweight"></div>
+                    <div class="scale-normal"></div>
+                    <div class="scale-overweight"></div>
+                    <div class="scale-obese"></div>
+                </div>
+                
+                <div class="scale-labels">
+                    <span>偏瘦</span>
+                    <span>正常</span>
+                    <span>超重</span>
+                    <span>肥胖</span>
+                </div>
+                
+                <div class="bmi-info">
+                    <p><strong>BMI範圍解釋:</strong></p>
+                    <ul>
+                        <li><strong>低於18.5:</strong> 體重過輕</li>
+                        <li><strong>18.5至24.9:</strong> 體重正常</li>
+                        <li><strong>25至29.9:</strong> 超重</li>
+                        <li><strong>30及以上:</strong> 肥胖</li>
+                    </ul>
+                    <p>注意: BMI計算結果僅供參考，不能替代專業醫療建議。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 醫療工具集 | 設計開發: BigbigDada</p>
+            <p>免責聲明: 本工具僅供參考，不能替代專業醫療建議</p>
+        </div>
+    </div>
+    
+    <script>
+        function calculateBMI() {
+            // 獲取輸入值
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            // 驗證輸入
+            if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+                alert('請輸入有效的身高和體重');
+                return;
+            }
+            
+            // 計算BMI (體重(kg) / 身高(m)²)
+            const heightInMeters = height / 100;
+            const bmi = weight / (heightInMeters * heightInMeters);
+            const roundedBMI = Math.round(bmi * 10) / 10;
+            
+            // 確定BMI類別
+            let category;
+            if (bmi < 18.5) {
+                category = '體重過輕';
+            } else if (bmi < 25) {
+                category = '體重正常';
+            } else if (bmi < 30) {
+                category = '超重';
+            } else {
+                category = '肥胖';
+            }
+            
+            // 顯示結果
+            document.getElementById('bmiValue').textContent = roundedBMI;
+            document.getElementById('bmiCategory').textContent = category;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html> 
