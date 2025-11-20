@@ -3,408 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>改良版艾氏量表評估工具</title>
+    <title>MAS Calculator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background-color: #ffffff; /* 背景色為白色 */
-            color: #000000; /* 文字顏色為黑色 */
+        :root { --primary: #00897b; --bg: #f4f7f6; --text: #333; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding-bottom: 100px; color: var(--text); }
+        
+        .nav { background: white; padding: 15px; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .nav a { text-decoration: none; color: var(--primary); font-weight: bold; }
+        .nav h1 { margin: 0; font-size: 1.2rem; }
+
+        .controls { padding: 10px; display: flex; gap: 10px; justify-content: center; background: #fff; border-bottom: 1px solid #eee; }
+        .btn-text { background: none; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 15px; }
+        .joint-card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .joint-title { font-weight: bold; margin-bottom: 10px; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 5px; display: flex; justify-content: space-between; }
+        
+        .muscle-group { margin-bottom: 12px; }
+        .muscle-label { font-size: 0.85rem; color: #666; margin-bottom: 5px; font-weight: 600; display: flex; justify-content: space-between;}
+        
+        /* Segmented Buttons for MAS: 0, 1, 1+, 2, 3, 4 */
+        .scale-group { display: flex; border: 1px solid var(--primary); border-radius: 6px; overflow: hidden; width: 100%; }
+        .scale-btn { 
+            flex: 1; padding: 8px 0; border: none; background: white; cursor: pointer; 
+            border-right: 1px solid var(--primary); color: var(--primary); font-weight: bold; font-size: 14px;
+            transition: 0.1s;
         }
-        h1 {
-            text-align: center;
-            color: #333333; /* 標題顏色為深灰色 */
-        }
-        h2 {
-            color: #00796b;
-            text-align: center;
-        }
-        .question {
-            margin-bottom: 30px;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-            box-shadow: 2px 2px 12px rgb(0 0 0 / 10%);
-        }
-        .question > label {
-            font-weight: bold;
-            color: #333333;
-            display: block;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        .side-label {
-            font-weight: bold;
-            margin: 10px 0;
-            color: #00796b;
-        }
-        .result {
-            font-size: 16px;
-            font-weight: normal;
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-            box-shadow: 2px 2px 12px rgb(0 0 0 / 10%);
-            display: none;
-        }
-        .btn {
-            display: block;
-            margin: 20px auto;
-            padding: 15px 40px;
-            font-size: 20px;
-            background-color: #00796b;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #004d40;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            color: #777;
-        }
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-        select:focus {
-            outline: none;
-            border-color: #00796b;
-        }
-        .side-container {
-            display: flex;
-            gap: 20px;
-        }
-        .side {
-            flex: 1;
-        }
-        .back-button {
-            display: inline-block;
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: #00796b;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .back-button:hover {
-            background-color: #004d40;
-        }
-        @media (max-width: 768px) {
-            .side-container {
-                flex-direction: column;
-            }
-            body {
-                margin: 10px;
-            }
-            .question {
-                padding: 15px;
-            }
-            .btn {
-                padding: 10px 20px;
-                font-size: 18px;
-            }
+        .scale-btn:last-child { border-right: none; }
+        .scale-btn.selected { background: var(--primary); color: white; }
+        
+        /* Floating Result Bar */
+        .fab { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; max-width: 800px; margin: 0 auto; }
+        .btn-copy { flex: 2; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; }
+        .btn-reset { flex: 1; background: #eee; border: none; border-radius: 6px; color: #555; }
+
+        @media (min-width: 600px) {
+            .row-desktop { display: flex; gap: 20px; }
+            .col-desktop { flex: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="index.html" class="back-button">← 返回工具集首頁</a>
-        
-        <h1>改良版艾氏量表評估工具</h1>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">Modified Ashworth Scale (MAS) Calculator</p>
-        
-        <form id="masForm">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <h2 style="flex: 1; text-align: center;">左側</h2>
-                <h2 style="flex: 1; text-align: center;">右側</h2>
-            </div>
 
-            <!-- 肘關節 -->
-            <div class="question">
-                <label>肘關節 Elbow Joint</label>
-                <div class="side-container">
-                    <div class="side">
-                        <div class="side-label">左側 Left Side</div>
-                        <select name="leftElbowFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="leftElbowExtensors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
-                    <div class="side">
-                        <div class="side-label">右側 Right Side</div>
-                        <select name="rightElbowFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="rightElbowExtensors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
+<div class="nav">
+    <a href="index.html">← Back</a>
+    <h1>Modified Ashworth Scale</h1>
+    <div style="width: 40px;"></div>
+</div>
+
+<div class="controls">
+    <button class="btn-text" onclick="setAll('0')">Set All Normal (0)</button>
+</div>
+
+<div class="container" id="app">
+    <div class="joint-card">
+        <div class="joint-title"><span>Elbow</span></div>
+        <div class="row-desktop">
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Flexor</span></div>
+                    <div class="scale-group" data-id="L_Elbow_Flex"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Extensor</span></div>
+                    <div class="scale-group" data-id="L_Elbow_Ext"></div>
                 </div>
             </div>
-
-            <!-- 腕關節 -->
-            <div class="question">
-                <label>腕關節 Wrist Joint</label>
-                <div class="side-container">
-                    <div class="side">
-                        <div class="side-label">左側 Left Side</div>
-                        <select name="leftWristFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="leftWristExtensors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
-                    <div class="side">
-                        <div class="side-label">右側 Right Side</div>
-                        <select name="rightWristFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="rightWristExtensors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Flexor</span></div>
+                    <div class="scale-group" data-id="R_Elbow_Flex"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Extensor</span></div>
+                    <div class="scale-group" data-id="R_Elbow_Ext"></div>
                 </div>
             </div>
-
-            <!-- 膝關節 -->
-            <div class="question">
-                <label>膝關節 Knee Joint</label>
-                <div class="side-container">
-                    <div class="side">
-                        <div class="side-label">左側 Left Side</div>
-                        <select name="leftKneeFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="leftKneeExtensors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
-                    <div class="side">
-                        <div class="side-label">右側 Right Side</div>
-                        <select name="rightKneeFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="rightKneeExtensors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 踝關節 -->
-            <div class="question">
-                <label>踝關節 Ankle Joint</label>
-                <div class="side-container">
-                    <div class="side">
-                        <div class="side-label">左側 Left Side</div>
-                        <select name="leftAnkleFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="leftAnkleDorsiflexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
-                    <div class="side">
-                        <div class="side-label">右側 Right Side</div>
-                        <select name="rightAnkleFlexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                        <select name="rightAnkleDorsiflexors" required>
-                            <option value="0">0 - 肌肉張力無增加</option>
-                            <option value="1">1 - 輕微增加，關節末端有阻力</option>
-                            <option value="1.5">1+ - 輕微增加，關節活動前半段有阻力</option>
-                            <option value="2">2 - 大部分關節活動範圍內有明顯阻力</option>
-                            <option value="3">3 - 明顯增加，被動活動困難</option>
-                            <option value="4">4 - 關節僵硬無法活動</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" class="btn" onclick="calculateMAS()">評估</button>
-        </form>
-        
-        <div id="result" class="result"></div>
+        </div>
     </div>
 
-    <div class="footer">
-        <p>© 2023 醫療工具集 | 設計開發: BigbigDada</p>
-        <p>免責聲明: 本工具僅供參考，不能替代專業醫療建議</p>
-    </div>
-
-    <script>
-    function calculateMAS() {
-        var form = document.getElementById('masForm');
-        var elements = form.elements;
-        
-        // 獲取左側分數
-        var leftScores = {
-            elbow: {
-                flexors: parseFloat(elements['leftElbowFlexors'].value),
-                extensors: parseFloat(elements['leftElbowExtensors'].value)
-            },
-            wrist: {
-                flexors: parseFloat(elements['leftWristFlexors'].value),
-                extensors: parseFloat(elements['leftWristExtensors'].value)
-            },
-            knee: {
-                flexors: parseFloat(elements['leftKneeFlexors'].value),
-                extensors: parseFloat(elements['leftKneeExtensors'].value)
-            },
-            ankle: {
-                flexors: parseFloat(elements['leftAnkleFlexors'].value),
-                dorsiflexors: parseFloat(elements['leftAnkleDorsiflexors'].value)
-            }
-        };
-
-        // 獲取右側分數
-        var rightScores = {
-            elbow: {
-                flexors: parseFloat(elements['rightElbowFlexors'].value),
-                extensors: parseFloat(elements['rightElbowExtensors'].value)
-            },
-            wrist: {
-                flexors: parseFloat(elements['rightWristFlexors'].value),
-                extensors: parseFloat(elements['rightWristExtensors'].value)
-            },
-            knee: {
-                flexors: parseFloat(elements['rightKneeFlexors'].value),
-                extensors: parseFloat(elements['rightKneeExtensors'].value)
-            },
-            ankle: {
-                flexors: parseFloat(elements['rightAnkleFlexors'].value),
-                dorsiflexors: parseFloat(elements['rightAnkleDorsiflexors'].value)
-            }
-        };
-
-        // 構建結果顯示
-        var resultText = `
-            <div style="margin-bottom: 20px; font-weight: bold; font-size: 18px; text-align: center;">改良版艾氏量表評估結果</div>
-            <div style="display: flex; gap: 40px; justify-content: center;">
-                <div style="text-align: left;">
-                    <h3 style="color: #00796b;">左側 Left Side</h3>
-                    <div>肘關節屈肌 Elbow Flexors: ${leftScores.elbow.flexors}</div>
-                    <div>肘關節伸肌 Elbow Extensors: ${leftScores.elbow.extensors}</div>
-                    <div>腕關節屈肌 Wrist Flexors: ${leftScores.wrist.flexors}</div>
-                    <div>腕關節伸肌 Wrist Extensors: ${leftScores.wrist.extensors}</div>
-                    <div>膝關節屈肌 Knee Flexors: ${leftScores.knee.flexors}</div>
-                    <div>膝關節伸肌 Knee Extensors: ${leftScores.knee.extensors}</div>
-                    <div>踝關節蹠屈肌 Ankle Plantar Flexors: ${leftScores.ankle.flexors}</div>
-                    <div>踝關節背屈肌 Ankle Dorsiflexors: ${leftScores.ankle.dorsiflexors}</div>
+    <div class="joint-card">
+        <div class="joint-title"><span>Wrist</span></div>
+        <div class="row-desktop">
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Flexor</span></div>
+                    <div class="scale-group" data-id="L_Wrist_Flex"></div>
                 </div>
-                <div style="text-align: left;">
-                    <h3 style="color: #00796b;">右側 Right Side</h3>
-                    <div>肘關節屈肌 Elbow Flexors: ${rightScores.elbow.flexors}</div>
-                    <div>肘關節伸肌 Elbow Extensors: ${rightScores.elbow.extensors}</div>
-                    <div>腕關節屈肌 Wrist Flexors: ${rightScores.wrist.flexors}</div>
-                    <div>腕關節伸肌 Wrist Extensors: ${rightScores.wrist.extensors}</div>
-                    <div>膝關節屈肌 Knee Flexors: ${rightScores.knee.flexors}</div>
-                    <div>膝關節伸肌 Knee Extensors: ${rightScores.knee.extensors}</div>
-                    <div>踝關節蹠屈肌 Ankle Plantar Flexors: ${rightScores.ankle.flexors}</div>
-                    <div>踝關節背屈肌 Ankle Dorsiflexors: ${rightScores.ankle.dorsiflexors}</div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Extensor</span></div>
+                    <div class="scale-group" data-id="L_Wrist_Ext"></div>
                 </div>
             </div>
-        `;
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Flexor</span></div>
+                    <div class="scale-group" data-id="R_Wrist_Flex"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Extensor</span></div>
+                    <div class="scale-group" data-id="R_Wrist_Ext"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        var resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = resultText;
-        resultDiv.style.display = 'block';
+    <div class="joint-card">
+        <div class="joint-title"><span>Knee</span></div>
+        <div class="row-desktop">
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Flexor</span></div>
+                    <div class="scale-group" data-id="L_Knee_Flex"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Extensor</span></div>
+                    <div class="scale-group" data-id="L_Knee_Ext"></div>
+                </div>
+            </div>
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Flexor</span></div>
+                    <div class="scale-group" data-id="R_Knee_Flex"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Extensor</span></div>
+                    <div class="scale-group" data-id="R_Knee_Ext"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+     <div class="joint-card">
+        <div class="joint-title"><span>Ankle</span></div>
+        <div class="row-desktop">
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Plantar Flexor</span></div>
+                    <div class="scale-group" data-id="L_Ankle_PF"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>L't Dorsiflexor</span></div>
+                    <div class="scale-group" data-id="L_Ankle_DF"></div>
+                </div>
+            </div>
+            <div class="col-desktop">
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Plantar Flexor</span></div>
+                    <div class="scale-group" data-id="R_Ankle_PF"></div>
+                </div>
+                <div class="muscle-group">
+                    <div class="muscle-label"><span>R't Dorsiflexor</span></div>
+                    <div class="scale-group" data-id="R_Ankle_DF"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="fab">
+    <button class="btn-reset" onclick="resetAll()">Reset</button>
+    <button class="btn-copy" onclick="copyResult()">Copy Note</button>
+</div>
+
+<script>
+    // Initialize buttons
+    const scores = ['0', '1', '1+', '2', '3', '4'];
+    
+    document.querySelectorAll('.scale-group').forEach(group => {
+        scores.forEach(score => {
+            const btn = document.createElement('button');
+            btn.className = 'scale-btn';
+            btn.innerText = score;
+            btn.onclick = function() {
+                group.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            };
+            group.appendChild(btn);
+        });
+    });
+
+    function setAll(val) {
+        document.querySelectorAll('.scale-group').forEach(group => {
+            group.querySelectorAll('.scale-btn').forEach(b => {
+                b.classList.remove('selected');
+                if(b.innerText === val) b.classList.add('selected');
+            });
+        });
     }
-    </script>
+
+    function resetAll() {
+        document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+    }
+
+    function getVal(id) {
+        const sel = document.querySelector(`.scale-group[data-id="${id}"] .selected`);
+        return sel ? sel.innerText : null; // Return null if not selected
+    }
+
+    function copyResult() {
+        // Only include joints that have at least one value selected to keep note clean
+        let lines = [];
+        
+        // Helper to format line: "Elbow Flex/Ext: 1+/0"
+        const formatJoint = (side, joint, flexId, extId) => {
+            const f = getVal(`${side}_${joint}_Flex`) || getVal(`${side}_${joint}_PF`); // Handle PF for ankle
+            const e = getVal(`${side}_${joint}_Ext`) || getVal(`${side}_${joint}_DF`); // Handle DF for ankle
+            
+            if (f || e) {
+                return `${side} ${joint}: ${f||'NT'}/${e||'NT'}`; // NT = Not Tested
+            }
+            return null;
+        };
+
+        // Upper Limb
+        let upperL = [formatJoint('L', 'Elbow', 'L_Elbow_Flex', 'L_Elbow_Ext'), formatJoint('L', 'Wrist', 'L_Wrist_Flex', 'L_Wrist_Ext')].filter(x=>x).join(', ');
+        let upperR = [formatJoint('R', 'Elbow', 'R_Elbow_Flex', 'R_Elbow_Ext'), formatJoint('R', 'Wrist', 'R_Wrist_Flex', 'R_Wrist_Ext')].filter(x=>x).join(', ');
+        
+        // Lower Limb
+        let lowerL = [formatJoint('L', 'Knee', 'L_Knee_Flex', 'L_Knee_Ext'), formatJoint('L', 'Ankle', 'L_Ankle_PF', 'L_Ankle_DF')].filter(x=>x).join(', ');
+        let lowerR = [formatJoint('R', 'Knee', 'R_Knee_Flex', 'R_Knee_Ext'), formatJoint('R', 'Ankle', 'R_Ankle_PF', 'R_Ankle_DF')].filter(x=>x).join(', ');
+
+        let text = "Modified Ashworth Scale (MAS):\n";
+        if (upperR || upperL) text += `UE: (R) ${upperR || 'NT'} | (L) ${upperL || 'NT'}\n`;
+        if (lowerR || lowerL) text += `LE: (R) ${lowerR || 'NT'} | (L) ${lowerL || 'NT'}\n`;
+        
+        if (!upperR && !upperL && !lowerR && !lowerL) {
+            text += "No assessment recorded.";
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('.btn-copy');
+            btn.innerText = "Copied!";
+            setTimeout(() => btn.innerText = "Copy Note", 1500);
+        });
+    }
+</script>
+
 </body>
-</html> 
+</html>
